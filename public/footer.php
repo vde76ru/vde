@@ -171,8 +171,8 @@
     </script>
     
     <!-- Подключаем дополнительные скрипты страниц -->
-    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/assets/dist/assets/main-Cb7r7JsV.js')): ?>
-        <script type="module" src="/assets/dist/assets/main-Cb7r7JsV.js"></script>
+    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/assets/dist/assets/main-DmzDJOVa.js')): ?>
+        <script type="module" src="/assets/dist/assets/main-DmzDJOVa.js"></script>
     <?php endif; ?>
 </body>
 </html>
