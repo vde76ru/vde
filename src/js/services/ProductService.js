@@ -363,7 +363,7 @@ export class ProductUtils {
         query = query.trim();
         
         // Код товара
-        if (/^[A-Za-z0-9\-\.\/\_\s]{2,30}$/u.test(query)) {
+        if (/^[\w\-/.\s]{2,30}$/.test(query)) {
             // Проверяем на общие слова
             const commonWords = ['выключатель', 'розетка', 'кабель', 'лампа', 'автомат'];
             const queryLower = query.toLowerCase();
