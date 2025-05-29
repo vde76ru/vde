@@ -1,23 +1,99 @@
-// vite.config.js - исправленный
+// vite.config.js
 import { defineConfig } from "vite";
+import path from 'path';
 
 export default defineConfig({
-  root: ".",
-  publicDir: "public",
+  // Корневая директория - там где находится vite.config.js
+  root: path.resolve(__dirname),
+  
+  // Настройки сборки
   build: {
-    outDir: "public/assets/dist",
+    // Выходная директория для скомпилированных файлов
+    outDir: path.resolve(__dirname, 'public/assets/dist'),
+    
+    // Очищаем директорию перед сборкой
     emptyOutDir: true,
-    manifest: true,
+    
+    // Настройки для rollup
     rollupOptions: {
       input: {
-        main: "src/js/main.js",
-        styles: "src/css/main.css"
+        // Основной файл входа
+        main: path.resolve(__dirname, 'src/js/main.js'),
+        
+        // Можно добавить другие точки входа
+        // admin: path.resolve(__dirname, 'src/js/admin.js'),
+      },
+      
+      output: {
+        // Настройки именования файлов
+        entryFileNames: 'js/[name]-[hash].js',
+        chunkFileNames: 'js/[name]-[hash].js',
+        assetFileNames: (assetInfo) => {
+          // Группируем ассеты по типам
+          if (assetInfo.name.endsWith('.css')) {
+            return 'css/[name]-[hash][extname]';
+          }
+          if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.name)) {
+            return 'images/[name]-[hash][extname]';
+          }
+          if (/\.(woff2?|eot|ttf|otf)$/i.test(assetInfo.name)) {
+            return 'fonts/[name]-[hash][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        }
+      }
+    },
+    
+    // Настройки минификации
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Удаляем console.log в продакшене
+        drop_debugger: true
+      }
+    },
+    
+    // Генерируем source maps только для разработки
+    sourcemap: process.env.NODE_ENV !== 'production',
+    
+    // Настройка чанков
+    chunkSizeWarningLimit: 1000, // Предупреждение при размере чанка > 1MB
+  },
+  
+  // Алиасы для удобных импортов
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      '@js': path.resolve(__dirname, 'src/js'),
+      '@css': path.resolve(__dirname, 'src/css'),
+      '@components': path.resolve(__dirname, 'src/js/components'),
+      '@services': path.resolve(__dirname, 'src/js/services'),
+      '@utils': path.resolve(__dirname, 'src/js/utils')
+    }
+  },
+  
+  // Настройки сервера разработки
+  server: {
+    port: 3000,
+    proxy: {
+      // Проксируем API запросы на PHP сервер
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
+      '/cart': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
+      '/specification': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
       }
     }
   },
-  server: {
-    proxy: {
-      '/api': 'http://localhost'
-    }
+  
+  // Оптимизации
+  optimizeDeps: {
+    include: ['jquery'] // Предварительно бандлим jQuery
   }
 });
