@@ -1,5 +1,6 @@
 Основаня дириктория сайта /var/www/www-root/data/site/vdestor.ru/ 
 сайт vdestor.ru
+база данных mysql7648xk-yrsuqk7klp9fujg.sql есть в репоизитории файл !
 конфигруации хранятся в  /etc/vdestor/config/ 
 
 .env
